@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alifu Dhaalu Atoll Education Centre | Parent Progress Portal (0455 Economics)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for radar & diagnostic charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#035485',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white; color: black; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+    <header class="bg-slate-900 text-white shadow-md border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center font-black text-lg text-white shadow-inner">
+                    AD
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold leading-tight">Alifu Dhaalu Atoll Education Centre</h1>
+                    <p class="text-xs text-slate-400">Grade 10 IGCSE Economics (0455) | Parent Diagnostic Portal</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-700/60 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
+                    Secure Data Portal
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div id="loginSection" class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden my-10 transition-all">
+            <div class="bg-gradient-to-r from-brand-700 to-brand-900 p-6 text-white text-center relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+                <svg class="w-12 h-12 mx-auto mb-3 text-brand-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457-.39-2.823-1.07-4" />
+                </svg>
+                <h2 class="text-2xl font-extrabold tracking-tight">Student Diagnostic Lookup</h2>
+                <p class="text-xs text-brand-100 mt-1">Enter your child's assigned Index Number to view their confidential diagnostic report.</p>
+            </div>
+            
+            <form id="indexForm" class="p-6 space-y-4" onsubmit="handleLookup(event)">
+                <div>
+                    <label for="studentIndex" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Student Index Number</label>
+                    <div class="relative rounded-lg shadow-sm">
+                        <input type="text" id="studentIndex" required placeholder="e.g. 2616 or 2626" 
+                               class="block w-full rounded-lg border-slate-300 pl-4 pr-10 py-3 text-lg font-mono focus:border-brand-500 focus:ring-brand-500 border focus:outline-none transition">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="hidden p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                    <span id="errorText">Invalid Index Number. Please check your assigned index and try again.</span>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition flex items-center justify-center space-x-2">
+                    <span>Access Confidential Report</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+
+                <div class="border-t border-slate-100 pt-3 text-center">
+                    <p class="text-xs text-slate-400">
+                        🔒 Data Privacy Protected: Diagnostic data is isolated strictly by index lookup.
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <div id="reportContainer" class="hidden space-y-8">
+            
+            <!-- Student Banner Header -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 relative overflow-hidden">
+                <div class="border-l-4 border-brand-600 pl-4">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <h2 id="studentNameDisplay" class="text-2xl font-bold text-slate-900">Student Name</h2>
+                        <span id="indexBadge" class="bg-slate-100 text-slate-700 font-mono text-xs font-semibold px-3 py-1 rounded-md border border-slate-300">Index: 0000</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">IGCSE Economics Syllabus (0455) | First Term Test & Model Examination Diagnostic Report</p>
+                </div>
+                <div class="flex items-center space-x-3 no-print">
+                    <button onclick="window.print()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition flex items-center space-x-1.5 shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                        <span>Print Report</span>
+                    </button>
+                    <button onclick="resetSearch()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg transition flex items-center space-x-1.5 shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+                        <span>Switch Student</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Term Test 1 Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 relative overflow-hidden">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">First Term Test</div>
+                    <div class="flex items-baseline space-x-2">
+                        <span id="ttScorePercent" class="text-3xl font-extrabold text-slate-900">0.0%</span>
+                        <span id="ttScoreRaw" class="text-xs text-slate-500">(0 / 120 marks)</span>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-xs text-slate-600">
+                        <span>Section A (Data): <strong id="ttSecA" class="text-slate-900">0/30</strong></span>
+                        <span>Section B (Essay): <strong id="ttSecB" class="text-slate-900">0/90</strong></span>
+                    </div>
+                </div>
+
+                <!-- Model Test Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 relative overflow-hidden">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Model Examination</div>
+                    <div class="flex items-baseline space-x-2">
+                        <span id="mtScorePercent" class="text-3xl font-extrabold text-slate-900">0.0%</span>
+                        <span id="mtScoreRaw" class="text-xs text-slate-500">(0 / 120 marks)</span>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-xs text-slate-600">
+                        <span>Section A (Data): <strong id="mtSecA" class="text-slate-900">0/30</strong></span>
+                        <span>Section B (Essay): <strong id="mtSecB" class="text-slate-900">0/90</strong></span>
+                    </div>
+                </div>
+
+                <!-- Trend & Growth Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 relative overflow-hidden">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Progress & Mastery Trend</div>
+                    <div class="flex items-center space-x-3 mt-1">
+                        <span id="trendBadge" class="px-3 py-1 rounded-full text-xs font-bold inline-flex items-center">
+                            Calculated Trend
+                        </span>
+                        <span id="trendValue" class="text-sm font-semibold text-slate-700">+0.0%</span>
+                    </div>
+                    <p id="trendSummaryText" class="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-100">
+                        Analysis of performance change between Term Test 1 and Model Test.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Radar Chart -->
+                <div class="lg:col-span-6 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                            <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+                            <span>Syllabus Unit Mastery Profile (0455)</span>
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Comparison of student mastery % across the 6 Cambridge syllabus units.</p>
+                    </div>
+                    <div class="relative w-full h-72">
+                        <canvas id="syllabusRadarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Unit Mastery Progress Bars -->
+                <div class="lg:col-span-6 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        <span>Syllabus Breakdown</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-4">Calculated mastery across both test papers per unit.</p>
+                    
+                    <div id="unitBarsContainer" class="space-y-4 text-xs">
+                        <!-- Dynamically Generated Bars -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Concepts Improved -->
+                <div class="bg-white rounded-2xl shadow-sm border border-emerald-200 p-6 relative overflow-hidden">
+                    <div class="w-2 h-full bg-emerald-500 absolute left-0 top-0"></div>
+                    <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                        <span>Concepts Improved & High Mastery</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-4">Topics where the student showed clear progress or sustained excellence.</p>
+                    
+                    <ul id="improvedConceptsList" class="space-y-3 text-xs">
+                        <!-- Dynamic items -->
+                    </ul>
+                </div>
+
+                <!-- Key Concepts Needing Improvement -->
+                <div class="bg-white rounded-2xl shadow-sm border border-amber-200 p-6 relative overflow-hidden">
+                    <div class="w-2 h-full bg-amber-500 absolute left-0 top-0"></div>
+                    <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        <span>Key Concepts Needing Focus</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-4">Actionable areas targeted for upcoming revision to boost final exam grade.</p>
+                    
+                    <ul id="focusConceptsList" class="space-y-3 text-xs">
+                        <!-- Dynamic items -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row justify-between sm:items-center space-y-2 sm:space-y-0">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Question-by-Question Breakdown</h3>
+                        <p class="text-xs text-slate-500">Detailed mark allocation for First Term Test & Model Examination.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 text-slate-700">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span> High Mastery (&ge; 75%)
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 text-slate-700">
+                            <span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span> Partial Mastery (50-74%)
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 text-slate-700">
+                            <span class="w-2 h-2 rounded-full bg-red-500 mr-1.5"></span> Needs Practice (&lt; 50%)
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation for Papers -->
+                <div class="bg-slate-50 border-b border-slate-200 px-6 pt-3 flex space-x-4">
+                    <button onclick="switchPaperTab('TT')" id="tabBtnTT" class="pb-3 text-xs font-bold border-b-2 border-brand-600 text-brand-600 transition">
+                        First Term Test (July 2026)
+                    </button>
+                    <button onclick="switchPaperTab('MT')" id="tabBtnMT" class="pb-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition">
+                        Model Examination (Sept 2026)
+                    </button>
+                </div>
+
+                <!-- Table Content -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200 text-xs">
+                        <thead class="bg-slate-50 text-slate-500 uppercase font-semibold">
+                            <tr>
+                                <th class="py-3 px-4 text-left">Q#</th>
+                                <th class="py-3 px-4 text-left">Syllabus Concept / Question Topic</th>
+                                <th class="py-3 px-4 text-center">Marks Scored</th>
+                                <th class="py-3 px-4 text-center">Max Marks</th>
+                                <th class="py-3 px-4 text-center">Percentage</th>
+                                <th class="py-3 px-4 text-left">Diagnostic Assessment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questionTableBody" class="divide-y divide-slate-200 bg-white">
+                            <!-- Dynamic Table Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Footer Notice -->
+            <div class="bg-slate-100 rounded-xl p-4 text-center text-xs text-slate-500 border border-slate-200">
+                Alifu Dhaalu Atoll Education Centre | Department of Economics | IGCSE 0455 Diagnostic Portal &copy; 2026
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // CIE 0455 Syllabus Topic Mapping
+        const SYLLABUS_UNITS = {
+            1: "Unit 1: Basic Economic Problem",
+            2: "Unit 2: Allocation of Resources",
+            3: "Unit 3: Microeconomic Decision Makers",
+            4: "Unit 4: Government & Macroeconomy",
+            5: "Unit 5: Economic Development",
+            6: "Unit 6: International Trade"
+        };
+
+        const QUESTION_METADATA = {
+            TT: {
+                "1a": { topic: "Government budget deficit calculation", unit: 4, max: 1 },
+                "1b": { topic: "Factors of production (Land identification)", unit: 1, max: 2 },
+                "1c": { topic: "External costs in tourism", unit: 2, max: 2 },
+                "1d": { topic: "MNC commercial bank expansion", unit: 3, max: 4 },
+                "1e": { topic: "Demand & Supply diagram (Productivity shift)", unit: 2, max: 4 },
+                "1f": { topic: "Healthcare spending vs Life expectancy correlation", unit: 5, max: 5 },
+                "1g": { topic: "Expansion of fishing industry (Evaluation)", unit: 1, max: 6 },
+                "1h": { topic: "Impact of deflation on economy", unit: 4, max: 6 },
+                "2a": { topic: "Advantages of firm mergers", unit: 3, max: 2 },
+                "2b": { topic: "Disadvantages of job loss for workers", unit: 4, max: 4 },
+                "2c": { topic: "Advantages of labor mobility", unit: 3, max: 6 },
+                "2d": { topic: "Price elasticity of demand (PED) for chocolate", unit: 2, max: 8 },
+                "3a": { topic: "Production Possibility Curve (PPC) axes", unit: 1, max: 2 },
+                "3b": { topic: "Merit goods vs Public goods", unit: 2, max: 4 },
+                "3c": { topic: "Division of labor benefits for firms", unit: 3, max: 6 },
+                "3d": { topic: "Monopoly impact on consumers", unit: 3, max: 8 },
+                "4a": { topic: "Types of unemployment", unit: 4, max: 2 },
+                "4b": { topic: "Remittances & living standards", unit: 5, max: 4 },
+                "4c": { topic: "Direct taxation impact on unemployment", unit: 4, max: 6 },
+                "4d": { topic: "Emigration benefits for doctors", unit: 5, max: 8 },
+                "5a": { topic: "Influences on household spending", unit: 3, max: 2 },
+                "5b": { topic: "Advantages of employing older workers", unit: 3, max: 4 },
+                "5c": { topic: "Household spending causing inflation", unit: 4, max: 6 },
+                "5d": { topic: "Government policies on increasing imports", unit: 6, max: 8 }
+            },
+            MT: {
+                "1a": { topic: "Government spending calculation", unit: 4, max: 1 },
+                "1b": { topic: "Reasons for raising retirement age", unit: 5, max: 2 },
+                "1c": { topic: "Worker emigration & wage differentials", unit: 3, max: 2 },
+                "1d": { topic: "Income inequality & progressive taxation", unit: 4, max: 4 },
+                "1e": { topic: "Demand & Supply diagram for water market", unit: 2, max: 4 },
+                "1f": { topic: "Doctors per 1000 vs Life expectancy correlation", unit: 5, max: 5 },
+                "1g": { topic: "Evaluation of low inflation rate benefits", unit: 4, max: 6 },
+                "1h": { topic: "Monopoly markets & consumer welfare", unit: 3, max: 6 },
+                "2a": { topic: "Price mechanism definition", unit: 2, max: 2 },
+                "2b": { topic: "PED influence on total consumer spending", unit: 2, max: 4 },
+                "2c": { topic: "Influences on worker wage increases", unit: 3, max: 6 },
+                "2d": { topic: "Protectionism for domestic industries", unit: 6, max: 8 },
+                "3a": { topic: "Tax definition", unit: 4, max: 2 },
+                "3b": { topic: "Causes of outward shift in PPC", unit: 1, max: 4 },
+                "3c": { topic: "Specialisation in electric cars", unit: 3, max: 6 },
+                "3d": { topic: "Government subsidies for public transport", unit: 2, max: 8 },
+                "4a": { topic: "Commercial bank functions", unit: 3, max: 2 },
+                "4b": { topic: "Reasons for MNC foreign production", unit: 6, max: 4 },
+                "4c": { topic: "Government policies to increase exports", unit: 6, max: 6 },
+                "4d": { topic: "Population growth in global cities", unit: 5, max: 8 },
+                "5a": { topic: "Causes of improved quality of enterprise", unit: 1, max: 2 },
+                "5b": { topic: "Working conditions & compensating wage differentials", unit: 3, max: 4 },
+                "5c": { topic: "Productivity drop impact on macroeconomic aims", unit: 4, max: 6 },
+                "5d": { topic: "Economic growth & poverty reduction", unit: 5, max: 8 }
+            }
+        };
+
+        const STUDENT_DATABASE = {
+            "2619": {
+                name: "Ahmed Aariz Abdul Azeez",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":3, "1e":0, "1f":4, "1g":5, "1h":0, "2a":2, "2b":4, "2c":6, "2d":0, "4a":0, "4b":2, "4c":4, "4d":8, "5a":2, "5b":4, "5c":0, "5d":6 },
+                MT: { "1a":0, "1b":2, "1c":2, "1d":1, "1e":0, "1f":2, "1g":1, "1h":5, "3a":2, "3b":0, "3c":2, "3d":7, "4a":2, "4b":3, "4c":2, "4d":6, "5a":1, "5b":1, "5c":2, "5d":3 }
+            },
+            "2598": {
+                name: "Ahmed Yooaan Mohamed Shah",
+                TT: { "1a":1, "1b":2, "1c":1, "1d":2, "1e":1, "1f":3, "1g":3, "1h":2 },
+                MT: { "1a":0, "1b":2, "1c":1, "1d":2, "1e":0, "1f":2, "1g":1, "1h":5, "2a":0, "2b":0, "2c":2, "2d":3, "3a":2, "3b":0, "3c":3, "3d":6, "4a":2, "4b":2, "4c":3, "4d":2 }
+            },
+            "2628": {
+                name: "Ajaadh Ibrahim Zaeem",
+                TT: { "1a":1, "1b":2, "1c":0, "1d":1, "1e":3, "1f":2, "1g":2, "1h":4, "2a":2, "2b":4, "2c":3, "2d":4, "3a":0, "3b":2, "3c":0, "3d":2, "4a":2, "4b":0, "4c":5, "4d":7 },
+                MT: { "1a":0, "1b":1, "1c":1, "1d":0, "1e":2, "1f":3, "1g":5, "1h":4, "3a":2, "3b":2, "3c":5, "3d":5, "4a":2, "4b":4, "4c":4, "4d":5, "5a":2, "5b":2, "5c":4, "5d":8 }
+            },
+            "2596": {
+                name: "Asyadh Mohamed Zahid",
+                TT: { "1a":0, "1b":2, "1c":0, "1d":2, "1e":3, "1f":1, "1g":4, "1h":5, "2a":2, "2b":2, "2c":6, "2d":3, "3a":0, "3b":1, "3c":4, "3d":6, "4a":1, "4b":4, "4c":0, "4d":0 },
+                MT: { "1a":0, "1b":0, "1c":2, "1d":2, "1e":3, "1f":3, "1g":4, "1h":5, "2a":1, "2b":2, "2c":2, "2d":3, "3a":2, "3b":0, "3c":2, "3d":7, "4a":2, "4b":4, "4c":2, "4d":5 }
+            },
+            "2626": {
+                name: "Hussain Lugmaan Ali Shiham",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":4, "1e":4, "1f":5, "1g":4, "1h":3, "2a":2, "2b":2, "2c":6, "2d":5, "4a":2, "4b":0, "4c":5, "4d":8, "5a":1, "5b":4, "5c":3, "5d":8 },
+                MT: { "1a":1, "1b":2, "1c":2, "1d":4, "1e":4, "1f":5, "1g":4, "1h":6, "2a":2, "2b":4, "2c":6, "2d":8, "3a":2, "3b":4, "3c":6, "3d":8, "5a":1, "5b":3, "5c":6, "5d":7 }
+            },
+            "2580": {
+                name: "Looth Eehan Abdul Latheef",
+                TT: { "1a":1, "1b":2, "1c":1, "1d":4, "1e":4, "1f":2, "1g":3, "1h":4, "2a":2, "2b":4, "2c":6, "2d":7, "3a":2, "3b":4, "3c":6, "3d":8, "4a":2, "4b":1, "4c":6, "4d":8 },
+                MT: { "1a":0, "1b":0, "1c":2, "1d":3, "1e":4, "1f":3, "1g":2, "1h":4, "2a":2, "2b":4, "2c":6, "2d":8, "3a":2, "3b":4, "3c":3, "3d":8, "4a":2, "4b":2, "4c":3, "4d":8, "5a":2, "5b":2, "5c":3, "5d":8 }
+            },
+            "2632": {
+                name: "Mohamed Ifhaam Hussain Saleem",
+                TT: { "1a":0, "1b":1, "1c":0, "1d":3, "1e":4, "1f":2, "1g":2, "1h":0, "2a":2, "2b":2, "2c":4, "2d":3, "4a":0, "4b":2, "4c":3, "4d":1, "5a":0, "5b":2, "5c":1, "5d":2 },
+                MT: { "1a":0, "1b":2, "1c":1, "1d":2, "1e":4, "1f":5, "1g":2, "1h":3, "2a":0, "2b":0, "2c":4, "2d":3, "3a":2, "3b":0, "3c":2, "3d":4, "4a":1, "4b":3, "4c":3, "4d":4 }
+            },
+            "2608": {
+                name: "Mohamed Nijaah Abdul Latheef",
+                TT: { "1a":0, "1b":2, "1c":0, "1d":3, "1e":1, "1f":5, "1g":4, "1h":0, "2a":2, "2b":4, "2c":6, "2d":0, "3a":0, "3b":1, "3c":0, "3d":5, "4a":0, "4b":0, "4c":3, "4d":0 },
+                MT: { "1a":0, "1b":2, "1c":2, "1d":3, "1e":1, "1f":5, "1g":2, "1h":4, "3a":2, "3b":3, "3c":6, "3d":4, "4a":2, "4b":2, "4c":4, "4d":3 }
+            },
+            "2584": {
+                name: "Mohamed Yooh Abdul Mueed",
+                TT: { "1a":0, "1b":1, "1c":0, "1d":1, "1e":1, "1f":2, "1g":2, "1h":1 },
+                MT: { "1a":0, "1b":2, "1c":1, "1d":2, "1e":0, "1f":0, "1g":0, "1h":0, "2a":1, "2b":1, "2c":1, "2d":1, "3a":1 }
+            },
+            "2630": {
+                name: "Thaqiyyulla Saifulla Ali",
+                TT: { "1a":1, "1b":2, "1c":1, "1d":4, "1e":4, "1f":4, "1g":5, "1h":4, "2a":2, "2b":4, "2c":6, "2d":7, "3a":0, "3b":2, "3c":6, "3d":7, "4a":1, "4b":4, "4c":4, "4d":8 },
+                MT: { "1a":0, "1b":0, "1c":2, "1d":4, "1e":4, "1f":5, "1g":6, "1h":6, "2a":2, "2b":2, "2c":6, "2d":8, "3a":2, "3b":4, "3c":6, "3d":8, "4a":0, "4b":2, "4c":2, "4d":7 }
+            },
+            "2578": {
+                name: "Aishath Alweena Ahmed",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":0, "1e":2, "1f":1, "1g":4, "1h":0, "2a":2, "2b":3, "2c":3, "2d":1, "4a":0, "4b":3, "4c":0, "4d":6, "5a":1, "5b":4, "5c":0, "5d":3 },
+                MT: { "1a":0, "1b":2, "1c":1, "1d":0, "1e":0, "1f":2, "1g":0, "1h":2, "2a":1, "2b":0, "2c":2, "2d":3, "3a":1, "3b":2, "3c":4, "3d":7, "4a":0, "4b":2, "4c":0, "4d":5, "5a":0, "5b":2, "5c":0, "5d":5 }
+            },
+            "2610": {
+                name: "Aishath Izwa Shaheem",
+                TT: { "1a":1, "1b":2, "1c":1, "1d":4, "1e":3, "1f":5, "1g":6, "1h":4, "2a":2, "2b":4, "2c":6, "2d":5, "3a":0, "3b":2, "3c":0, "3d":7, "4a":0, "4b":0, "4c":1, "4d":7 },
+                MT: { "1a":0, "1b":2, "1c":2, "1d":2, "1e":4, "1f":5, "1g":3, "1h":3, "2a":0, "2b":2, "2c":5, "2d":3, "3a":2, "3b":3, "3c":6, "3d":6, "4a":2, "4b":4, "4c":4, "4d":6 }
+            },
+            "2616": {
+                name: "Aishath Laiha Abdulla Nazeer",
+                TT: { "1a":1, "1b":2, "1c":2, "1d":4, "1e":3, "1f":5, "1g":6, "1h":6, "2a":2, "2b":2, "2c":6, "2d":6, "3a":2, "3b":4, "3c":5, "3d":8, "4a":2, "4b":4, "4c":5, "4d":8 },
+                MT: { "1a":1, "1b":2, "1c":2, "1d":4, "1e":4, "1f":5, "1g":6, "1h":6, "2a":2, "2b":2, "2c":6, "2d":6, "4a":2, "4b":4, "4c":6, "4d":8, "5a":2, "5b":4, "5c":6, "5d":8 }
+            },
+            "2611": {
+                name: "Aishath Zawdha Ali",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":3, "1e":0, "1f":1, "1g":5, "1h":3, "2a":1, "2b":2, "2c":4, "2d":0, "4a":1, "4b":0, "4c":0, "4d":5, "5a":1, "5b":3, "5c":1, "5d":3 },
+                MT: { "1a":0, "1b":2, "1c":1, "1d":1, "1e":0, "1f":2, "1g":4, "1h":1, "2a":1, "2b":0, "2c":0, "2d":5, "3a":3, "3b":2, "3c":0, "3d":2, "4a":1, "4b":1, "4c":1, "4d":3, "5a":2, "5b":2, "5c":2, "5d":4 }
+            },
+            "2622": {
+                name: "Aminath Aslaa Abdulla",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":3, "1e":3, "1f":1, "1g":6, "1h":5, "2a":2, "2b":2, "2c":4, "2d":4, "4a":0, "4b":0, "4c":1, "4d":5, "5a":2, "5b":4, "5c":0, "5d":4 },
+                MT: { "1a":0, "1b":2, "1c":2, "1d":0, "1e":2, "1f":1, "1g":1, "1h":4, "2a":2, "2b":1, "2c":6, "2d":5, "3a":2, "3b":1, "3c":6, "3d":5, "4a":2, "4b":3, "4c":2, "4d":5, "5a":1, "5b":1, "5c":0, "5d":3 }
+            },
+            "2595": {
+                name: "Aminath Mishya Mohamed",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":4, "1e":4, "1f":2, "1g":2, "1h":0, "2a":0, "2b":2, "2c":2, "2d":0, "4a":1, "4b":1, "4c":2, "4d":2, "5a":2, "5b":4, "5c":0, "5d":5 },
+                MT: { "1a":0, "1b":2, "1c":1, "1d":2, "1e":4, "1f":4, "1g":6, "1h":0, "2a":2, "2b":0, "2c":6, "2d":3, "3a":2, "3b":0, "3c":6, "3d":3, "4a":2, "4b":4, "4c":6, "4d":4, "5a":1, "5b":2, "5c":0, "5d":5 }
+            },
+            "2587": {
+                name: "Aminath Shumooh Ali Fuadh",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":2, "1e":1, "1f":4, "1g":3, "1h":3, "2a":2, "2b":4, "2c":5, "2d":0, "4a":0, "4b":0, "4c":0, "4d":4, "5a":1, "5b":4, "5c":4, "5d":2 },
+                MT: { "1a":0, "1b":1, "1c":2, "1d":3, "1e":3, "1f":2, "1g":3, "1h":4, "2a":0, "2b":0, "2c":4, "2d":3, "4a":2, "4b":2, "4c":2, "4d":5, "5a":0, "5b":2, "5c":2, "5d":2 }
+            },
+            "2597": {
+                name: "Fathimath Ulyaa Binthu Adam Shahaam",
+                TT: { "1a":1, "1b":2, "1c":1, "1d":0, "1e":4, "1f":5, "1g":6, "1h":5, "2a":2, "2b":4, "2c":6, "2d":2, "3a":2, "3b":4, "3c":6, "3d":8, "4a":2, "4b":1, "4c":6, "4d":8 },
+                MT: { "1a":1, "1b":2, "1c":2, "1d":3, "1e":4, "1f":3, "1g":4, "1h":6, "2a":2, "2b":0, "2c":6, "2d":7, "3a":2, "3b":0, "3c":6, "3d":7, "4a":2, "4b":4, "4c":6, "4d":6, "5a":1, "5b":3, "5c":5, "5d":8 }
+            },
+            "2613": {
+                name: "Rayaa Ahmed Ramiz",
+                TT: { "1a":0, "1b":0, "1c":0, "1d":2, "1e":0, "1f":0, "1g":2, "1h":0, "2a":2, "2b":2, "2c":2, "2d":0, "3a":0, "3b":0, "3c":0, "3d":2, "4a":0, "4b":0, "4c":1, "4d":0 },
+                MT: { "1a":0, "1b":1, "1c":2, "1d":2, "1e":0, "1f":0, "1g":0, "1h":1, "2a":0, "2b":1, "2c":2, "2d":1, "3a":2, "3b":0, "3c":2, "3d":4, "4a":2, "4b":2, "4c":2, "4d":2, "5a":1, "5b":2, "5c":3, "5d":4 }
+            },
+            "2623": {
+                name: "Rihsha Adam Raoof",
+                TT: { "1a":0, "1b":0, "1c":0, "1d":2, "1e":0, "1f":0, "1g":2, "1h":0, "2a":2, "2b":4, "2c":0, "2d":0, "4a":0, "4b":0, "4c":0, "4d":2, "5a":2, "5b":4, "5c":0, "5d":0 },
+                MT: { "1a":0, "1b":2, "1c":2, "1d":2, "1e":0, "1f":5, "1g":2, "1h":3, "2a":0, "2b":0, "2c":5, "2d":4, "4a":2, "4b":2, "4c":4, "4d":8, "5a":0, "5b":3, "5c":5, "5d":3 }
+            },
+            "2606": {
+                name: "Rikza Gasim Rauf",
+                TT: { "1a":1, "1b":2, "1c":1, "1d":4, "1e":4, "1f":2, "1g":6, "1h":5, "2a":2, "2b":4, "2c":4, "2d":5, "3a":1, "3b":3, "3c":5, "3d":7, "4a":2, "4b":4, "4c":2, "4d":6, "5a":2, "5b":4, "5c":2, "5d":6 },
+                MT: { "1a":0, "1b":2, "1c":2, "1d":2, "1e":4, "1f":5, "1g":4, "1h":2, "2a":0, "2b":1, "2c":5, "2d":4, "3a":1, "3b":4, "3c":3, "3d":8, "5a":0, "5b":4, "5c":6, "5d":8 }
+            },
+            "2594": {
+                name: "Shi'aa Saeed",
+                TT: { "1a":0, "1b":2, "1c":0, "1d":2, "1e":4, "1f":2, "1g":5, "1h":3, "2a":1, "2b":4, "2c":6, "2d":0, "3a":1, "3b":1, "3c":5, "3d":6, "4a":2, "4b":0, "4c":3, "4d":7 },
+                MT: { "1a":0, "1b":2, "1c":2, "1d":3, "1e":4, "1f":5, "1g":5, "1h":5, "3a":2, "3b":4, "3c":6, "3d":7, "4a":2, "4b":4, "4c":4, "4d":5, "5a":2, "5b":4, "5c":5, "5d":8 }
+            },
+            "2629": {
+                name: "Zaka Ibrahim",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":3, "1e":0, "1f":1, "1g":2, "1h":0, "2a":2, "2b":4, "2c":3, "2d":0, "3a":0, "3b":3, "3c":3, "3d":5, "4a":2, "4b":4, "4c":0, "4d":2 },
+                MT: { "1a":0, "1b":1, "1c":2, "1d":2, "1e":2, "1f":3, "1g":2, "1h":1, "3a":2, "3b":0, "3c":4, "3d":2, "4a":2, "4b":2, "4c":4, "4d":2, "5a":1, "5b":4, "5c":2, "5d":5 }
+            },
+            "2744": {
+                name: "Aishath Yoolee Hamzath",
+                TT: { "1a":0, "1b":2, "1c":1, "1d":2, "1e":2, "1f":3, "1g":3, "1h":2, "2a":1, "2b":2, "2c":3, "2d":4 },
+                MT: { "1a":0, "1b":1, "1c":2, "1d":2, "1e":2, "1f":3, "1g":3, "1h":2, "3a":2, "3b":2, "3c":3, "3d":4 }
+            }
+        };
+
+        let currentStudentData = null;
+        let currentPaperTab = 'TT';
+        let radarChartInstance = null;
+
+        function handleLookup(e) {
+            e.preventDefault();
+            const indexInput = document.getElementById('studentIndex').value.trim();
+            const errBox = document.getElementById('errorMessage');
+
+            if (STUDENT_DATABASE[indexInput]) {
+                errBox.classList.add('hidden');
+                currentStudentData = {
+                    index: indexInput,
+                    ...STUDENT_DATABASE[indexInput]
+                };
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('reportContainer').classList.remove('hidden');
+                renderStudentReport();
+            } else {
+                errBox.classList.remove('hidden');
+            }
+        }
+
+        function resetSearch() {
+            document.getElementById('reportContainer').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('studentIndex').value = '';
+            document.getElementById('errorMessage').classList.add('hidden');
+            if (radarChartInstance) {
+                radarChartInstance.destroy();
+            }
+        }
+
+        function renderStudentReport() {
+            // Set Header Details
+            document.getElementById('studentNameDisplay').textContent = currentStudentData.name;
+            document.getElementById('indexBadge').textContent = `Index: ${currentStudentData.index}`;
+
+            // Calculate TT totals
+            const ttScores = currentStudentData.TT;
+            let ttTotal = 0;
+            let ttSecA = 0;
+            let ttSecB = 0;
+
+            Object.keys(ttScores).forEach(qKey => {
+                const mark = ttScores[qKey];
+                ttTotal += mark;
+                if (qKey.startsWith('1')) {
+                    ttSecA += mark;
+                } else {
+                    ttSecB += mark;
+                }
+            });
+
+            // Calculate MT totals
+            const mtScores = currentStudentData.MT;
+            let mtTotal = 0;
+            let mtSecA = 0;
+            let mtSecB = 0;
+
+            Object.keys(mtScores).forEach(qKey => {
+                const mark = mtScores[qKey];
+                mtTotal += mark;
+                if (qKey.startsWith('1')) {
+                    mtSecA += mark;
+                } else {
+                    mtSecB += mark;
+                }
+            });
+
+            const ttPct = ((ttTotal / 120) * 100).toFixed(1);
+            const mtPct = ((mtTotal / 120) * 100).toFixed(1);
+
+            document.getElementById('ttScorePercent').textContent = `${ttPct}%`;
+            document.getElementById('ttScoreRaw').textContent = `(${ttTotal} / 120 marks)`;
+            document.getElementById('ttSecA').textContent = `${ttSecA}/30`;
+            document.getElementById('ttSecB').textContent = `${ttSecB}/90`;
+
+            document.getElementById('mtScorePercent').textContent = `${mtPct}%`;
+            document.getElementById('mtScoreRaw').textContent = `(${mtTotal} / 120 marks)`;
+            document.getElementById('mtSecA').textContent = `${mtSecA}/30`;
+            document.getElementById('mtSecB').textContent = `${mtSecB}/90`;
+
+            // Trend Badge Calculation
+            const diff = (mtPct - ttPct).toFixed(1);
+            const trendBadge = document.getElementById('trendBadge');
+            const trendValue = document.getElementById('trendValue');
+            const trendSummaryText = document.getElementById('trendSummaryText');
+
+            if (diff > 0) {
+                trendBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+                trendBadge.textContent = "Significant Progress";
+                trendValue.className = "text-sm font-semibold text-emerald-600";
+                trendValue.textContent = `+${diff}% Score Improvement`;
+                trendSummaryText.textContent = `Excellent overall growth! Performance increased from ${ttPct}% in the Term Test to ${mtPct}% in the Model Examination.`;
+            } else if (diff == 0) {
+                trendBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-300";
+                trendBadge.textContent = "Consistent Performance";
+                trendValue.className = "text-sm font-semibold text-blue-600";
+                trendValue.textContent = `0.0% Change`;
+                trendSummaryText.textContent = `Maintained a stable score level across both assessment papers at ${mtPct}%.`;
+            } else {
+                trendBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300";
+                trendBadge.textContent = "Minor Dip / High Competition";
+                trendValue.className = "text-sm font-semibold text-amber-600";
+                trendValue.textContent = `${diff}% Difference`;
+                trendSummaryText.textContent = `Model examination paper presented higher conceptual difficulty. Targeted revision recommended.`;
+            }
+
+            // Calculate Unit Mastery Percentages across both papers
+            const unitStats = { 1: { scored: 0, max: 0 }, 2: { scored: 0, max: 0 }, 3: { scored: 0, max: 0 }, 4: { scored: 0, max: 0 }, 5: { scored: 0, max: 0 }, 6: { scored: 0, max: 0 } };
+
+            // Process TT
+            Object.keys(ttScores).forEach(q => {
+                const meta = QUESTION_METADATA.TT[q];
+                if (meta) {
+                    unitStats[meta.unit].scored += ttScores[q];
+                    unitStats[meta.unit].max += meta.max;
+                }
+            });
+
+            // Process MT
+            Object.keys(mtScores).forEach(q => {
+                const meta = QUESTION_METADATA.MT[q];
+                if (meta) {
+                    unitStats[meta.unit].scored += mtScores[q];
+                    unitStats[meta.unit].max += meta.max;
+                }
+            });
+
+            const unitScoresArr = [];
+            const unitBarsContainer = document.getElementById('unitBarsContainer');
+            unitBarsContainer.innerHTML = '';
+
+            for (let u = 1; u <= 6; u++) {
+                const scored = unitStats[u].scored;
+                const max = unitStats[u].max;
+                const pct = max > 0 ? Math.round((scored / max) * 100) : 0;
+                unitScoresArr.push(pct);
+
+                let barColor = "bg-red-500";
+                if (pct >= 75) barColor = "bg-emerald-500";
+                else if (pct >= 50) barColor = "bg-amber-500";
+
+                unitBarsContainer.innerHTML += `
+                    <div>
+                        <div class="flex justify-between font-medium mb-1">
+                            <span class="text-slate-700">${SYLLABUS_UNITS[u]}</span>
+                            <span class="font-bold text-slate-900">${pct}% (${scored}/${max} pts)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="${barColor} h-2.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderRadarChart(unitScoresArr);
+
+            generateQualitativeInsights(unitStats);
+
+            renderQuestionTable();
+        }
+
+        function renderRadarChart(unitScoresArr) {
+            const ctx = document.getElementById('syllabusRadarChart').getContext('2d');
+            if (radarChartInstance) {
+                radarChartInstance.destroy();
+            }
+
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Unit 1: Basic Problem',
+                        'Unit 2: Resource Alloc.',
+                        'Unit 3: Micro Decision',
+                        'Unit 4: Gov & Macro',
+                        'Unit 5: Development',
+                        'Unit 6: Int. Trade'
+                    ],
+                    datasets: [{
+                        label: 'Mastery Level (%)',
+                        data: unitScoresArr,
+                        backgroundColor: 'rgba(2, 132, 199, 0.2)',
+                        borderColor: 'rgba(2, 132, 199, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(3, 105, 161, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(3, 105, 161, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e2e8f0' },
+                            grid: { color: '#f1f5f9' },
+                            pointLabels: {
+                                font: { family: 'Inter', size: 10, weight: '600' },
+                                color: '#475569'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { stepSize: 25, display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function generateQualitativeInsights(unitStats) {
+            const improvedList = document.getElementById('improvedConceptsList');
+            const focusList = document.getElementById('focusConceptsList');
+
+            improvedList.innerHTML = '';
+            focusList.innerHTML = '';
+
+            const ttScores = currentStudentData.TT;
+            const mtScores = currentStudentData.MT;
+
+            const improvements = [];
+            const focusAreas = [];
+
+            // Specific Topic Check 1: Monopoly & Market Structures (TT 3d vs MT 1h)
+            const ttMonopoly = (ttScores["3d"] || 0) / 8;
+            const mtMonopoly = (mtScores["1h"] || 0) / 6;
+            if (mtMonopoly >= 0.75 || mtMonopoly > ttMonopoly) {
+                improvements.push({
+                    title: "Market Structures & Monopoly Power",
+                    desc: "Demonstrated stronger evaluation of monopoly price setting, economies of scale, and consumer welfare impact in the Model Exam."
+                });
+            } else if (mtMonopoly < 0.6) {
+                focusAreas.push({
+                    title: "Monopoly Power & Consumer Effects (Syllabus 3.7)",
+                    desc: "Strengthen dual-sided analysis (discussing both benefits like R&D/economies of scale vs drawbacks like high prices/lack of choice)."
+                });
+            }
+
+            // Specific Topic Check 2: Inflation & Price Level Changes
+            const ttDeflation = (ttScores["1h"] || 0) / 6;
+            const mtInflation = (mtScores["1g"] || 0) / 6;
+            if (mtInflation >= 0.67 || mtInflation > ttDeflation) {
+                improvements.push({
+                    title: "Inflation & Deflation Macro Dynamics",
+                    desc: "Improved understanding of how price level changes impact international competitiveness, debt costs, and investment decisions."
+                });
+            } else {
+                focusAreas.push({
+                    title: "Macroeconomic Inflation & Deflation (Syllabus 4.6)",
+                    desc: "Review consequences of deflation and demand-pull inflation on real GDP growth and household purchasing power."
+                });
+            }
+
+            // Specific Topic Check 3: Demand & Supply Diagrammatic Analysis
+            const ttDiag = (ttScores["1e"] || 0) / 4;
+            const mtDiag = (mtScores["1e"] || 0) / 4;
+            if (mtDiag >= 0.75) {
+                improvements.push({
+                    title: "Demand & Supply Diagrammatic Skill (Syllabus 2.3)",
+                    desc: "Consistently draws accurate curve shifts, equilibrium price (P), and quantity (Q) labels for market changes."
+                });
+            } else {
+                focusAreas.push({
+                    title: "Market Diagram Accuracy (Syllabus 2.3 & 2.4)",
+                    desc: "Practice drawing clear shifts in supply/demand curves with full axis labeling (Price and Quantity)."
+                });
+            }
+
+            // Specific Topic Check 4: Section B Extended Response
+            const mt8MarkAvg = ( (mtScores["2d"]||0) + (mtScores["3d"]||0) + (mtScores["4d"]||0) + (mtScores["5d"]||0) ) / 8;
+            if (mt8MarkAvg >= 0.75) {
+                improvements.push({
+                    title: "Section B Extended 8-Mark Essay Structure",
+                    desc: "High proficiency in structured two-sided discussion questions with clear economic reasoning and balanced conclusions."
+                });
+            } else if (mt8MarkAvg < 0.6) {
+                focusAreas.push({
+                    title: "8-Mark Evaluation Technique ('Discuss Whether')",
+                    desc: "Ensure every 8-mark question includes both 'Why it might happen' and 'Why it might not happen' followed by a reasoned judgment."
+                });
+            }
+
+            // General Unit fallback if items are low
+            if (unitStats[5].scored / (unitStats[5].max || 1) >= 0.65) {
+                improvements.push({
+                    title: "Economic Development & Living Standards (Syllabus 5)",
+                    desc: "Solid grasp of healthcare indicators, life expectancy correlation, and population structure."
+                });
+            }
+
+            if (unitStats[6].scored / (unitStats[6].max || 1) < 0.6) {
+                focusAreas.push({
+                    title: "International Trade & Protectionism (Syllabus 6)",
+                    desc: "Revise current account balances, tariff barriers, MNC foreign direct investment, and exchange rate influences."
+                });
+            }
+
+            // Render Improvements to DOM
+            improvements.forEach(item => {
+                improvedList.innerHTML += `
+                    <li class="p-3 bg-emerald-50/60 rounded-lg border border-emerald-100">
+                        <div class="font-bold text-slate-800">${item.title}</div>
+                        <div class="text-slate-600 mt-0.5">${item.desc}</div>
+                    </li>
+                `;
+            });
+
+            // Render Focus Areas to DOM
+            focusAreas.forEach(item => {
+                focusList.innerHTML += `
+                    <li class="p-3 bg-amber-50/60 rounded-lg border border-amber-100">
+                        <div class="font-bold text-slate-800">${item.title}</div>
+                        <div class="text-slate-600 mt-0.5">${item.desc}</div>
+                    </li>
+                `;
+            });
+        }
+
+        function switchPaperTab(paperKey) {
+            currentPaperTab = paperKey;
+            const btnTT = document.getElementById('tabBtnTT');
+            const btnMT = document.getElementById('tabBtnMT');
+
+            if (paperKey === 'TT') {
+                btnTT.className = "pb-3 text-xs font-bold border-b-2 border-brand-600 text-brand-600 transition";
+                btnMT.className = "pb-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition";
+            } else {
+                btnMT.className = "pb-3 text-xs font-bold border-b-2 border-brand-600 text-brand-600 transition";
+                btnTT.className = "pb-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition";
+            }
+
+            renderQuestionTable();
+        }
+
+        function renderQuestionTable() {
+            const tbody = document.getElementById('questionTableBody');
+            tbody.innerHTML = '';
+
+            const paperScores = currentStudentData[currentPaperTab] || {};
+            const paperMeta = QUESTION_METADATA[currentPaperTab];
+
+            Object.keys(paperMeta).forEach(qKey => {
+                const meta = paperMeta[qKey];
+                const markScored = paperScores[qKey];
+
+                if (markScored !== undefined) {
+                    const pct = Math.round((markScored / meta.max) * 100);
+                    
+                    let badgeClass = "bg-red-100 text-red-800 border-red-200";
+                    let assessmentText = "Needs Revision: Practice definition & application";
+                    if (pct >= 75) {
+                        badgeClass = "bg-emerald-100 text-emerald-800 border-emerald-200";
+                        assessmentText = "High Mastery: Key exam criteria fully satisfied";
+                    } else if (pct >= 50) {
+                        badgeClass = "bg-amber-100 text-amber-800 border-amber-200";
+                        assessmentText = "Partial Mastery: Good points; expand explanation depth";
+                    }
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-3 px-4 font-mono font-bold text-slate-900">${qKey.toUpperCase()}</td>
+                            <td class="py-3 px-4 font-medium text-slate-800">
+                                <div>${meta.topic}</div>
+                                <div class="text-[10px] text-slate-400 font-mono">${SYLLABUS_UNITS[meta.unit]}</div>
+                            </td>
+                            <td class="py-3 px-4 text-center font-bold text-slate-900">${markScored}</td>
+                            <td class="py-3 px-4 text-center text-slate-500">${meta.max}</td>
+                            <td class="py-3 px-4 text-center font-semibold">
+                                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${badgeClass}">
+                                    ${pct}%
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-slate-600 text-[11px]">${assessmentText}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            if (tbody.children.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="py-6 text-center text-slate-400 italic">
+                            No question records found for this assessment.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
